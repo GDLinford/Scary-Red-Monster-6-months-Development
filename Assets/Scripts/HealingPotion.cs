@@ -3,28 +3,24 @@ using UnityEngine;
 public class HealingPotion : MonoBehaviour
 {
     public Sprite HealingPotionSprite ; // Amount of health the potion restores
+    public int potPickupAmount;
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Player"))
+        Inventory playerInvUi = other.GetComponent<Inventory>();
+        PlayerInventory playerInv = other.GetComponent<PlayerInventory>();
+
+        if(playerInvUi != null) 
         {
-            Inventory playerInventoryUI = other.GetComponentInChildren<Inventory>();
-
-            if (playerInventoryUI != null)
-            {
-                // Add the key sprite to the currently selected inventory slot
-                playerInventoryUI.AddItem(HealingPotionSprite);
-                Debug.Log("Potion Added.");
-
-                // Destroy the key game object after collection
-                Destroy(gameObject);
-                Debug.Log("The Potion is Added in the Collection.");
-            }
-            else
-            {
-                Debug.Log("Player's inventory UI not found.");
-            }
+            playerInvUi.AddItem(HealingPotionSprite);
+            playerInv.AddPot();
+            Destroy(gameObject);
         }
+        else
+        {
+            Debug.Log("PLayer Inv UI not found");
+        }
+
     }
 }
 

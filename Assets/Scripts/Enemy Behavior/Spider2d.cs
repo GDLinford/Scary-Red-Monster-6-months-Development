@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class Spider2d : MonoBehaviour
 {
+    PatrolScript pScript;
+
     // the public and private starts
     public float speed = 2f;
-    public Transform[] patrolPoints;
-    private int currentPatrolPoint = 0;
     public float damage = 6f;
 
     public float detectionRange = 5f;
@@ -16,7 +16,6 @@ public class Spider2d : MonoBehaviour
     private Rigidbody2D rb;
     private Animator animator;
     private Transform player;
-
 
     private bool canTakeDamage = true;
     public float damageCooldown = 1f;
@@ -32,6 +31,7 @@ public class Spider2d : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         player = GameObject.FindWithTag("Player").transform;
         animator = GetComponent<Animator>();
+        pScript = GetComponent<PatrolScript>();
     }
 
     // Update is called once per frame
@@ -63,39 +63,8 @@ public class Spider2d : MonoBehaviour
         }
         else
         {
-            Patrol();
+            pScript.Patrol();
         }
-    }
-    void Patrol()
-    {
-
-
-        Transform target = patrolPoints[currentPatrolPoint];
-
-        Vector2 targetPosition = target.position;
-        Vector2 moveDirection = (targetPosition - (Vector2)transform.position).normalized;
-
-        rb.velocity = new Vector2(moveDirection.x * speed, rb.velocity.y);
-
-        if (moveDirection.x > 0 && transform.localScale.x < 0) // facing right and left 
-        {
-            Debug.Log("flipping the right");
-            FlipDirection();
-        }
-        else if (moveDirection.x < 0 && transform.localScale.x > 0) // facing left and right
-        {
-            Debug.Log("flipping the Left");
-            FlipDirection();
-        }
-
-        if (Vector2.Distance(transform.position, targetPosition) < 0.1f) //  
-        {
-            // Flips The Direction of the Enemy 
-            FlipDirection();
-      
-            currentPatrolPoint = (currentPatrolPoint + 1) % patrolPoints.Length;
-        }
-
     }
 
     void FollowPlayer()
@@ -116,7 +85,7 @@ public class Spider2d : MonoBehaviour
         }
 
     }
-    void FlipDirection()
+    public void FlipDirection()
     {
         Vector3 scale = transform.localScale;
         scale.x = -scale.x;

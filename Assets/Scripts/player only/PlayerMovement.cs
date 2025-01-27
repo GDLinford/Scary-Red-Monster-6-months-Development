@@ -17,6 +17,9 @@ public class PlayerMovement : MonoBehaviour
     private bool isRunning;
     private float moveDirection; // For capturing horizontal input
 
+    PlayerInventory inventory;
+    public int HealAmount = 50;
+
     void Start()
     {
         // Get required components
@@ -29,12 +32,26 @@ public class PlayerMovement : MonoBehaviour
         if (animator == null) Debug.LogError("Animator component not found on " + gameObject.name);
         if (playerStamina == null) Debug.LogError("PlayerStamina component not found on " + gameObject.name);
         if (groundCheck == null) Debug.LogError("GroundCheck Transform not assigned in the Inspector on " + gameObject.name);
+
+        inventory = GetComponent<PlayerInventory>();
     }
 
     void Update()
     {
         HandleInput();
         UpdateAnimations();
+
+
+        if(Input.GetMouseButtonDown(0) && inventory.potCount >= 1)
+        {
+            inventory.UsePotion(); 
+            //access the health script and heal
+            PlayerHealth playerHealth = GetComponent<PlayerHealth>();
+            if (playerHealth != null)
+            {
+                playerHealth.Heal(HealAmount);
+            }
+        }
     }
 
     void FixedUpdate()

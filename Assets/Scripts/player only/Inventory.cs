@@ -9,6 +9,8 @@ public class Inventory : MonoBehaviour
 
     public Sprite DefaultSlotSprite;
 
+    public Sprite invSlot;
+
     void Start()
     {
         // Initialize the inventory slots
